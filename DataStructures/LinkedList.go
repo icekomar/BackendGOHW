@@ -5,183 +5,184 @@ import (
 	"fmt"
 )
 
-type Node struct {
-	Val  int
-	Next *Node
+type node struct {
+	val  int
+	next *node
 }
 type LinkedList struct {
-	Len  int
-	Head *Node
+	len  int
+	Head *node
 }
 
 func Print(list *LinkedList) {
 	temp := list.Head
 	for temp != nil {
-		fmt.Print(temp.Val)
+		fmt.Print(temp.val)
 		fmt.Print("->")
-		temp = temp.Next
+		temp = temp.next
 	}
 	fmt.Println()
 }
 
-// Создания нового односвязного списка с количеством узлов q
+// NewList Создания нового односвязного списка с количеством узлов q
 func NewList(q int) LinkedList {
 	if q > 0 {
-		list := LinkedList{Len: q, Head: newNode(0)}
+		list := LinkedList{len: q, Head: newNode(0)}
 		temp := list.Head
 		for i := 1; i < q; i++ {
-			temp.Next = newNode(0)
-			temp = temp.Next
+			temp.next = newNode(0)
+			temp = temp.next
 		}
 		return list
 	}
-	return LinkedList{Len: 0, Head: nil}
+	return LinkedList{len: 0, Head: nil}
 }
 
 // создание нового узла
-func newNode(k int) *Node {
-	node := Node{Val: k, Next: nil}
-	return &node
+func newNode(k int) *node {
+	newnode := node{val: k, next: nil}
+	return &newnode
 }
 
-// добавление в конец списка
+// Add добавление в конец списка
 func (list *LinkedList) Add(k int) {
 	temp := list.Head
 	// если список пустой
 	if temp == nil {
-		node := newNode(k)
-		list.Head = node
-	} else { // иначе
-		for temp.Next != nil {
-			temp = temp.Next
-		}
-		node := newNode(k)
-		temp.Next = node
+		newnode := newNode(k)
+		list.Head = newnode
+		return
+	} // иначе
+	for temp.next != nil {
+		temp = temp.next
 	}
-	list.Len++
+	temp.next = newNode(k)
+	list.len++
 
 }
 
-// удаление с конца списка
+// Pop удаление с конца списка
 func (list *LinkedList) Pop() error {
 	// если список пустой
-	if list.Len < 1 {
-		return errors.New("Nothing to delete")
+	if list.len < 1 {
+		return errors.New("nothing to delete")
 	}
-
-	if list.Len > 1 {
+	if list.len > 1 {
 		temp := list.Head
-		var temp2 *Node
-		for temp.Next != nil {
+		var temp2 *node
+		for temp.next != nil {
 			temp2 = temp
-			temp = temp.Next
+			temp = temp.next
 		}
-		temp2.Next = nil
-		list.Len--
-
-	} else { // если в списке только один элемент
-		list.Head = nil
-		list.Len = 0
-	}
-	return nil
-}
-
-// Показ значения на позиции pos (позиции начинаются с 1)
-func (list *LinkedList) At(pos int) (int, error) {
-	if pos > list.Len || pos < 1 {
-		return 0, errors.New("Position out of list")
-	} else {
-		i := 1
-		temp := list.Head
-		for i != pos {
-			temp = temp.Next
-			i++
-		}
-		return temp.Val, nil
-	}
-}
-
-// Размер списка
-func (list *LinkedList) Size() int {
-	return list.Len
-}
-
-// Удаление из спискм узла на позиции pos (позиции начинаются с 1)
-func (list *LinkedList) DeleteFrom(pos int) error {
-	if pos > list.Len || pos < 1 {
-		return errors.New("Position out of list")
-	} else if pos == 1 { // если надо удалить первый узел
-		list.Head = list.Head.Next
-	} else if pos == list.Len { // если последний
-		temp := list.Head
-		for temp.Next.Next != nil {
-			temp = temp.Next
-		}
-		temp.Next = nil
-	} else {
-		i := 1
-		temp := list.Head
-		for temp.Next != nil && i+1 != pos {
-			temp = temp.Next
-			i++
-		}
-		temp.Next = temp.Next.Next
-
-	}
-	list.Len--
-	return nil
-}
-
-// Изменение значения в узле на позиции pos (позиции начинаются с 1)
-func (list *LinkedList) UpdateAt(pos, val int) error {
-	if pos > list.Len || pos < 1 {
-		return errors.New("Position out of list")
-	} else {
-		i := 1
-		temp := list.Head
-		for i != pos {
-			temp = temp.Next
-			i++
-		}
-		temp.Val = val
+		temp2.next = nil
+		list.len--
 		return nil
+	} // если в списке только один элемент
+	list.Head = nil
+	list.len = 0
+	return nil
+}
+
+// At Показ значения на позиции pos (позиции начинаются с 1)
+func (list *LinkedList) At(pos int) (int, error) {
+	if pos > list.len || pos < 1 {
+		return 0, errors.New("position out of list")
 	}
+	i := 1
+	temp := list.Head
+	for i != pos {
+		temp = temp.next
+		i++
+	}
+	return temp.val, nil
+
+}
+
+// Size Размер списка
+func (list *LinkedList) Size() int {
+	return list.len
+}
+
+// DeleteFrom Удаление из спискм узла на позиции pos (позиции начинаются с 1)
+func (list *LinkedList) DeleteFrom(pos int) error {
+	switch true {
+	case pos > list.len || pos < 1:
+		return errors.New("position out of list")
+	case pos == 1: // если надо удалить первый узел
+		list.Head = list.Head.next
+	case pos == list.len: // если последний
+		temp := list.Head
+		for temp.next.next != nil {
+			temp = temp.next
+		}
+		temp.next = nil
+	default:
+		i := 1
+		temp := list.Head
+		for temp.next != nil && i+1 != pos {
+			temp = temp.next
+			i++
+		}
+		temp.next = temp.next.next
+
+	}
+	list.len--
+	return nil
+}
+
+// UpdateAt Изменение значения в узле на позиции pos (позиции начинаются с 1)
+func (list *LinkedList) UpdateAt(pos, val int) error {
+	if pos > list.len || pos < 1 {
+		return errors.New("position out of list")
+	}
+	i := 1
+	temp := list.Head
+	for i != pos {
+		temp = temp.next
+		i++
+	}
+	temp.val = val
+	return nil
+
 }
 
 func FromSliceToList(s []int) LinkedList {
-	list := LinkedList{Len: len(s), Head: newNode(s[0])}
+	list := LinkedList{len: len(s), Head: newNode(s[0])}
 	temp := list.Head
 	for i := 1; i < len(s); i++ {
-		temp.Next = newNode(s[i])
-		temp = temp.Next
+		temp.next = newNode(s[i])
+		temp = temp.next
 	}
 	return list
 }
 
 func (list *LinkedList) InsertAt(pos, val int) error {
-	if pos > list.Len+1 || pos < 1 {
-		return errors.New("Position out of list")
-	}
-	node := newNode(val)
-	if pos == 1 {
-		node.Next = list.Head
-		list.Head = node
-	} else if pos == (list.Len + 1) {
+
+	switch {
+	case pos > list.len+1 || pos < 1:
+		return errors.New("position out of list")
+	case pos == 1:
+		newnode := newNode(val)
+		newnode.next = list.Head
+		list.Head = newnode
+	case pos == (list.len + 1):
+		newnode := newNode(val)
 		temp := list.Head
-		for temp.Next != nil {
-			temp = temp.Next
+		for temp.next != nil {
+			temp = temp.next
 		}
-		temp.Next = node
-	} else {
+		temp.next = newnode
+	default:
+		newnode := newNode(val)
 		i := 1
 		temp := list.Head
-		for temp.Next != nil && i+1 != pos {
-			temp = temp.Next
+		for temp.next != nil && i+1 != pos {
+			temp = temp.next
 			i++
 		}
-		node.Next = temp.Next
-		temp.Next = node
+		newnode.next = temp.next
+		temp.next = newnode
 	}
-	list.Len++
+	list.len++
 	return nil
 }
