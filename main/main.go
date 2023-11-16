@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	api := api.New("localhost:8080")
-	api.FillEndpoints()
-	log.Fatal(api.ListenAndServe())
+	a := api.New("localhost:8080")
+	a.FillEndpoints()
+	log.Fatal(a.ListenAndServe())
 }
