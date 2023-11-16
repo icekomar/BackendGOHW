@@ -1,9 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"dz/api"
+	"log"
 )
 
 func main() {
-	fmt.Println(2)
+	api := api.New("localhost:8080")
+	api.FillEndpoints()
+	log.Fatal(api.ListenAndServe())
 }
