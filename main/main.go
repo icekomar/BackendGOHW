@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dz/api"
+	"dz/pkg/api"
 	"log"
 )
 

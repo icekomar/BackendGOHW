@@ -1,18 +1,18 @@
 package api
 
 import (
-	"dz/Structs"
+	"dz/pkg/storage"
 	"net/http"
 )
 
 type api struct {
 	addr string
 	r    *http.ServeMux
-	s    *Structs.LocalStorage
+	s    *storage.LocalStorage
 }
 
 func New(addr string) *api {
-	return &api{addr: addr, r: new(http.ServeMux), s: Structs.New()}
+	return &api{addr: addr, r: new(http.ServeMux), s: storage.New()}
 }
 
 func (api *api) FillEndpoints() {

@@ -1,9 +1,8 @@
 package api
 
 import (
-	"dz/Structs"
+	"dz/pkg/models"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -16,14 +15,11 @@ func (api *api) AnswerHandle(w http.ResponseWriter, r *http.Request) {
 		}
 
 	case http.MethodPost:
-		api.s.Lock()
-		var m []Structs.Record
+		var m []models.Record
 		err := json.NewDecoder(r.Body).Decode(&m)
 		if err != nil {
 			return
 		}
-		fmt.Println(m)
 		api.s.AddFromJson(m)
-		api.s.Unlock()
 	}
 }
